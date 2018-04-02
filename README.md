@@ -8,8 +8,6 @@ xxxxxyt [at] ACM Class 2018 Machine Learning
 
 ## Bugs
 
-- content中数字数据未统一
-
 ## Tools
 
 - [结巴中文分词](https://github.com/fxsjy/jieba)
@@ -34,6 +32,6 @@ xxxxxyt [at] ACM Class 2018 Machine Learning
 
 - [文本分类实战--从TFIDF到深度学习（附代码）](https://blog.csdn.net/liuchonge/article/details/72614524)
 
-- [multi-class-text-classification-cnn](https://github.com/jiegzhan/multi-class-text-classification-cnn)​
+- [multi-class-text-classification-cnn](https://github.com/jiegzhan/multi-class-text-classification-cnn)
 
-  ​
+- [Python TF-IDF计算100份文档关键词权重](http://www.cnblogs.com/chenbjin/p/3851165.html)
