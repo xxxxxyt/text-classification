@@ -47,14 +47,13 @@ if __name__ == "__main__":
     ifs = open(path + 'test.json', 'r')
     articles_test = ifs.read().split('\n')
     articles_test.pop()
-    print(len(articles_test))
     articles_raw = articles_train + articles_test
     print('opening file has been done!\n')
 
     """ read in articles """
     articles_title = []
     articles_content = []
-    for i in range(len(articles_raw) - 1):
+    for i in range(len(articles_raw)):
     # for i in range(2000):
         if i % 1000 == 0:
             print('i = ', i)

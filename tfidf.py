@@ -4,6 +4,7 @@ import os
 import sys
 import pickle
 import numpy as np
+import scipy
 from sklearn import feature_extraction
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     ifs = open(path + 'seg_content.pkl', 'rb')
     seg_content = pickle.load(ifs)
     print('opening file has been done!\n')
-    
+
     """ word freq """
     [freq_mat_title, feature_title] = \
         calc_tfidf_matrix(seg_title, max_features= 2 ** 10)
@@ -42,7 +43,7 @@ if __name__ == "__main__":
     [freq_mat_content, feature_content] = \
         calc_tfidf_matrix(seg_content, max_features= 2 ** 15)
     print('calculating freq mat content has been done!')
-    freq_mat = np.hstack((freq_mat_title, freq_mat_content))
+    freq_mat = scipy.sparse.hstack((freq_mat_title, freq_mat_content))
     print('merging freq mats has been done!')
     # save_mat(freq_mat, path + 'freq_mat.txt', begin = 0)
     ofs = open(path + 'freq_mat.pkl', 'wb')
