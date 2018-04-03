@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import jieba
+import pickle
 from bs4 import BeautifulSoup
 
 def deal_with_content(content, stop_list):
@@ -30,20 +31,27 @@ def deal_with_content(content, stop_list):
 
 if __name__ == "__main__":
 
-    stop_list = {}.fromkeys([line.strip() for line in open('dict/stop-list.txt')])
-
-    """ setting path """
-    path = '../dataset/train'
-    print('input YES to comfirm path: '+ path)
+    print('input YES to comfirm: ')
     while True:
         s = input()
         if s == 'YES':
             break
-    ifs = open(path + '.json', 'r')
+
+    stop_list = {}.fromkeys([line.strip() for line in open('dict/stop-list.txt')])
+
+    """ setting path """
+    path = '../dataset/'
+    ifs = open(path + 'train.json', 'r')
+    articles_train = ifs.read().split('\n')
+    articles_train.pop()
+    ifs = open(path + 'test.json', 'r')
+    articles_test = ifs.read().split('\n')
+    articles_test.pop()
+    print(len(articles_test))
+    articles_raw = articles_train + articles_test
     print('opening file has been done!\n')
 
     """ read in articles """
-    articles_raw = ifs.read().split('\n')
     articles_title = []
     articles_content = []
     for i in range(len(articles_raw) - 1):
@@ -61,8 +69,8 @@ if __name__ == "__main__":
     print('reading in articles has been done!\n')
     
     """ write segment """
-    ofs = open(path + '_title.txt', 'w')
-    ofs.write('\n'.join(articles_title))
-    ofs = open(path + '_content.txt', 'w')
-    ofs.write('\n'.join(articles_content))
+    ofs = open(path + 'seg_title.pkl', 'wb')
+    pickle.dump(articles_title, ofs)
+    ofs = open(path + 'seg_content.pkl', 'wb')
+    pickle.dump(articles_content, ofs)
     print('writing segment has been done!')

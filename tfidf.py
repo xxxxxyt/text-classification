@@ -3,60 +3,52 @@
 import os
 import sys
 import pickle
-from numpy import *
+import numpy as np
 from sklearn import feature_extraction
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 
-def calc_tfidf_matrix(articles, max_features = 2 ** 15):
-    frequencier = CountVectorizer(max_features = max_features)
+def calc_tfidf_matrix(articles, max_features = 2 ** 12):
+    vectorizer = CountVectorizer(max_features = max_features)
     transformer = TfidfTransformer()
     tfidf = transformer.fit_transform( \
-            frequencier.fit_transform(articles))
-    weight = tfidf.toarray()
+            vectorizer.fit_transform(articles))
+    # weight = tfidf.toarray()
     # print('weight = \n', weight, '\n')
     word_list = vectorizer.get_feature_names()
-    print(word_list)
-    return weight
-
-def save_mat(mat, path, begin):
-    ofs = open(path, 'w')
-    i = begin
-    while i < len(mat):
-        if i % 1000 == 0:
-            print('i = ', i)
-            ofs.close()
-            ofs = open(path, 'a')
-        line = mat[i]
-        for j in range(len(line)):
-            # ofs.write('%f' % mat[i][j] + ' ')
-            s = str(mat[i][j])
-            if s == '0.0':
-                s = '0'
-            ofs.write(s + ' ')
-        ofs.write('\n')
-        i = i + 1
+    # print(word_list)
+    return [tfidf, word_list]
 
 if __name__ == "__main__":
-    """ setting path """
-    path = '../dataset/train'
-    print('input YES to comfirm path: '+ path)
+
+    print('input YES to comfirm: ')
     while True:
         s = input()
         if s == 'YES':
             break
-    ifs = open(path + '_title.txt', 'r')
-    articles_title = ifs.read().split('\n')
-    ifs = open(path + '_content.txt', 'r')
-    articles_content = ifs.read().split('\n')
+
+    """ read in data """
+    path = '../dataset/'
+    ifs = open(path + 'seg_title.pkl', 'rb')
+    seg_title = pickle.load(ifs)
+    ifs = open(path + 'seg_content.pkl', 'rb')
+    seg_content = pickle.load(ifs)
     print('opening file has been done!\n')
     
     """ word freq """
-    freq_mat_title = calc_tfidf_matrix(articles_title)
-    freq_mat_content = calc_tfidf_matrix(articles_content)
+    [freq_mat_title, feature_title] = \
+        calc_tfidf_matrix(seg_title, max_features= 2 ** 10)
+    print('calculating freq mat title has been done!')
+    [freq_mat_content, feature_content] = \
+        calc_tfidf_matrix(seg_content, max_features= 2 ** 15)
+    print('calculating freq mat content has been done!')
     freq_mat = np.hstack((freq_mat_title, freq_mat_content))
-    print('calculating freq mat has been done!')
-    save_mat(freq_mat, path + '_freq_mat.txt', begin = 0)
-    # ofs = open(path + '_freq_mat.pkl', 'wb')
-    # pickle.dump(freq_mat, ofs)
+    print('merging freq mats has been done!')
+    # save_mat(freq_mat, path + 'freq_mat.txt', begin = 0)
+    ofs = open(path + 'freq_mat.pkl', 'wb')
+    pickle.dump(freq_mat, ofs)
+    ofs = open(path + 'feature_title.pkl', 'wb')
+    pickle.dump(feature_title, ofs)
+    ofs = open(path + 'feature_content.pkl', 'wb')
+    pickle.dump(feature_content, ofs)
     print('saving freq mat has been done!')
